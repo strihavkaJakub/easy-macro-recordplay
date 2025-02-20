@@ -20,27 +20,31 @@ export class MacroPlay extends SingletonAction<MacroSettings> {
   override async onKeyDown(ev: KeyDownEvent): Promise<void> {
     const settings = await streamDeck.settings.getGlobalSettings<MacroSettings>() || {};
     const require = createRequire(import.meta.url);
-    
+
     if (!this.isPlaying) {
-      this.isPlaying = true;
-      this.stopPlayback = false;
-      ev.action.setTitle("Stop");
-
-      if (!settings.macros || settings.macros.length === 0) {
-        ev.action.setTitle("No Macro");
-        streamDeck.logger.info("No macro found");
-        this.isPlaying = false;
-        return;
-      }
-
-      const delayBetweenReplays = ev.payload.settings.delayBetweenReplays as number ?? 1000;
-      this.startMacroLoop(settings.macros[0].events, ev, delayBetweenReplays);
+      await this.startPlayback(ev, settings);
     } else {
       this.stopPlayback = true;
       this.isPlaying = false;
       ev.action.setTitle("Replay");
       streamDeck.logger.info("Playback stopped by user.");
     }
+  }
+
+  private async startPlayback(ev: KeyDownEvent, settings: MacroSettings): Promise<void> {
+    this.isPlaying = true;
+    this.stopPlayback = false;
+    ev.action.setTitle("Stop");
+
+    if (!settings.macros || settings.macros.length === 0) {
+      ev.action.setTitle("No Macro");
+      streamDeck.logger.info("No macro found");
+      this.isPlaying = false;
+      return;
+    }
+
+    const delayBetweenReplays = ev.payload.settings.delayBetweenReplays as number ?? 1000;
+    await this.startMacroLoop(settings.macros[0].events, ev, delayBetweenReplays);
   }
 
   private async startMacroLoop(events: MacroEvent[], ev: KeyDownEvent<MacroSettings>, delayBetweenReplays: number): Promise<void> {
@@ -58,61 +62,51 @@ export class MacroPlay extends SingletonAction<MacroSettings> {
       Key: { [key: string]: number };
     };
     keyboard.config.autoDelayMs = 0;
-    // This object holds the previous snapshot's key states.
     let previousState: { [key: string]: boolean } = {};
 
     while (!this.stopPlayback) {
-      for (let i = 0; i < events.length; i++) {
+      for (const currentEvent of events) {
         if (this.stopPlayback) break;
-
-        const currentEvent = events[i];
-
-        // For each key in the current snapshot, compare to previous state.
-        for (const key in currentEvent.keyState) {
-          const isPressedNow = currentEvent.keyState[key];
-          const wasPressedBefore = previousState[key] || false;
-
-          // If key was false (or not present) and now true, press it.
-          if (isPressedNow && !wasPressedBefore) {
-            const nutKey = keyToNutKey(key);
-            if (nutKey !== undefined) {
-              streamDeck.logger.info(`Pressing key ${nutKey} for ${key}`);
-              await keyboard.pressKey(nutKey);
-            } else {
-              streamDeck.logger.warn(`No nut-js mapping for key: ${key}`);
-            }
-          }
-
-          // If key was true and now false, release it.
-          if (!isPressedNow && wasPressedBefore) {
-            const nutKey = keyToNutKey(key);
-            if (nutKey !== undefined) {
-              streamDeck.logger.info(`Releasing key ${nutKey} for ${key}`);
-              await keyboard.releaseKey(nutKey);
-            } else {
-              streamDeck.logger.warn(`No nut-js mapping for key: ${key}`);
-            }
-          }
-        }
-
-        // Set the previous state to the current snapshot for the next iteration.
+        await this.processEvent(currentEvent, previousState, keyboard);
         previousState = { ...currentEvent.keyState };
-
-        // Wait for the recorded duration before moving to the next snapshot.
         await this.delay(currentEvent.duration);
       }
-
-      // Wait for the defined delay between complete replays.
       if (!this.stopPlayback) {
         streamDeck.logger.info(`Waiting ${delayBetweenReplays}ms before replaying the macro...`);
         await this.delay(delayBetweenReplays);
       }
     }
 
-    // Cleanup when stopping
     ev.action.setTitle("Replay");
     streamDeck.logger.info("Playback finished or stopped.");
     this.isPlaying = false;
+  }
+
+  private async processEvent(currentEvent: MacroEvent, previousState: { [key: string]: boolean }, keyboard: any): Promise<void> {
+    for (const key in currentEvent.keyState) {
+      const isPressedNow = currentEvent.keyState[key];
+      const wasPressedBefore = previousState[key] || false;
+
+      if (isPressedNow && !wasPressedBefore) {
+        const nutKey = keyToNutKey(key);
+        if (nutKey !== undefined) {
+          streamDeck.logger.info(`Pressing key ${nutKey} for ${key}`);
+          await keyboard.pressKey(nutKey);
+        } else {
+          streamDeck.logger.warn(`No nut-js mapping for key: ${key}`);
+        }
+      }
+
+      if (!isPressedNow && wasPressedBefore) {
+        const nutKey = keyToNutKey(key);
+        if (nutKey !== undefined) {
+          streamDeck.logger.info(`Releasing key ${nutKey} for ${key}`);
+          await keyboard.releaseKey(nutKey);
+        } else {
+          streamDeck.logger.warn(`No nut-js mapping for key: ${key}`);
+        }
+      }
+    }
   }
 
   private delay(ms: number): Promise<void> {
