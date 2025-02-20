@@ -1,0 +1,71 @@
+{
+	"Name": "Easy Macro Record/Play",
+	"Version": "0.1.0.0",
+	"Author": "Jakub Střihavka",
+	"Actions": [
+		{
+			"Name": "Record Macro",
+			"UUID": "com.jakub-stihavka.easy-macro-recordplay.record",
+			"Icon": "imgs/actions/counter/icon",
+			"Tooltip": "Records a keyboard macro",
+			"PropertyInspectorPath": "ui/record-macro.html",
+			"Controllers": [
+				"Keypad"
+			],
+			"States": [
+				{
+					"Image": "imgs/actions/macro/start",
+					"TitleAlignment": "middle"
+				},
+				{
+					"Image": "imgs/actions/macro/stop",
+					"TitleAlignment": "middle"
+				}
+			]
+		},
+		{
+			"Name": "Play Macro",
+			"UUID": "com.jakub-stihavka.easy-macro-recordplay.play",
+			"Icon": "imgs/actions/counter/icon",
+			"Tooltip": "Plays a recorded keyboard macro",
+			"PropertyInspectorPath": "ui/play-macro.html",
+			"Controllers": [
+				"Keypad"
+			],
+			"States": [
+				{
+					"Image": "imgs/actions/macro/replay",
+					"TitleAlignment": "middle"
+				},
+				{
+					"Image": "imgs/actions/macro/stop",
+					"TitleAlignment": "middle"
+				}
+			]
+		}
+	],
+	"Category": "Easy Macro Record/Play",
+	"CategoryIcon": "imgs/plugin/macro",
+	"CodePath": "bin/plugin.js",
+	"Description": "Easy plugin to record and play any keyboard macro",
+	"Icon": "imgs/plugin/marketplace",
+	"SDKVersion": 2,
+	"Software": {
+		"MinimumVersion": "6.4"
+	},
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "12"
+		},
+		{
+			"Platform": "windows",
+			"MinimumVersion": "10"
+		}
+	],
+	"Nodejs": {
+		"Version": "20",
+		"Debug": "enabled"
+	},
+	"UUID": "com.jakub-stihavka.easy-macro-recordplay"
+}

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <title>Easy macros settings</title>
+    <meta charset="utf-8" />
+    <script src="https://sdpi-components.dev/releases/v3/sdpi-components.js"></script>
+</head>
+
+<body>
+    <!--
+        Learn more about property inspector components at https://sdpi-components.dev/docs/components
+    -->
+    <sdpi-item label="Delay between replays (ms)">
+        <div class="textfield-container">
+            <sdpi-textfield
+                setting="delayBetweenReplays"
+                global
+                pattern="^[1-9][0-9]*$"
+                placeholder="Delay in ms (default 1000)"
+        >
+            </sdpi-textfield>
+        </div>
+    </sdpi-item>
+</body>
+
+</html>
