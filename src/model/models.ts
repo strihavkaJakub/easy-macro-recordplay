@@ -1,11 +1,10 @@
 export type MacroEvent = {
-  key: number;
-  eventType: EventType,
-  duration: number; // Epoch timestamp for when the event occurred
+  keyState: { [key: string]: boolean }; // Current key state
+  duration: number; // Time since the last snapshot
 };
 
 export type Macro = {
-  id: string; // Unique identifier (could be a timestamp or GUID)
+  id: string;
   events: MacroEvent[];
 };
 
