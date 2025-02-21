@@ -11,14 +11,17 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export class MacroPlay extends SingletonAction<MacroSettings> {
   private isPlaying = false;
   private stopPlayback = false;
+  private delayBetweenReplays = 1000;
+  private previousState: { [key: string]: boolean } = {};
 
   override async onWillAppear(ev: WillAppearEvent<MacroSettings>): Promise<void> {
     this.isPlaying = false;
     this.stopPlayback = false;
   }
 
-  override async onKeyDown(ev: KeyDownEvent): Promise<void> {
+  override async onKeyDown(ev: KeyDownEvent<MacroSettings>): Promise<void> {
     const settings = await streamDeck.settings.getGlobalSettings<MacroSettings>() || {};
+    this.delayBetweenReplays = settings.delayBetweenReplays || 1000;
     const require = createRequire(import.meta.url);
 
     if (!this.isPlaying) {
@@ -26,12 +29,13 @@ export class MacroPlay extends SingletonAction<MacroSettings> {
     } else {
       this.stopPlayback = true;
       this.isPlaying = false;
+      await this.releaseAllKeys();
       ev.action.setTitle("Replay");
       streamDeck.logger.info("Playback stopped by user.");
     }
   }
 
-  private async startPlayback(ev: KeyDownEvent, settings: MacroSettings): Promise<void> {
+  private async startPlayback(ev: KeyDownEvent<MacroSettings>, settings: MacroSettings): Promise<void> {
     this.isPlaying = true;
     this.stopPlayback = false;
     ev.action.setTitle("Stop");
@@ -42,9 +46,8 @@ export class MacroPlay extends SingletonAction<MacroSettings> {
       this.isPlaying = false;
       return;
     }
-
-    const delayBetweenReplays = ev.payload.settings.delayBetweenReplays as number ?? 1000;
-    await this.startMacroLoop(settings.macros[0].events, ev, delayBetweenReplays);
+    streamDeck.logger.info(`Playing macro ${JSON.stringify(ev.payload.settings)}`);
+    await this.startMacroLoop(settings.macros[0].events, ev, this.delayBetweenReplays);
   }
 
   private async startMacroLoop(events: MacroEvent[], ev: KeyDownEvent<MacroSettings>, delayBetweenReplays: number): Promise<void> {
@@ -62,13 +65,13 @@ export class MacroPlay extends SingletonAction<MacroSettings> {
       Key: { [key: string]: number };
     };
     keyboard.config.autoDelayMs = 0;
-    let previousState: { [key: string]: boolean } = {};
+    this.previousState = {};
 
     while (!this.stopPlayback) {
       for (const currentEvent of events) {
         if (this.stopPlayback) break;
-        await this.processEvent(currentEvent, previousState, keyboard);
-        previousState = { ...currentEvent.keyState };
+        await this.processEvent(currentEvent, this.previousState, keyboard);
+        this.previousState = { ...currentEvent.keyState };
         await this.delay(currentEvent.duration);
       }
       if (!this.stopPlayback) {
@@ -107,6 +110,26 @@ export class MacroPlay extends SingletonAction<MacroSettings> {
         }
       }
     }
+  }
+
+  private async releaseAllKeys(): Promise<void> {
+    const require = createRequire(import.meta.url);
+    const { keyboard } = require("@nut-tree-fork/nut-js") as {
+      keyboard: any;
+    };
+
+    for (const key in this.previousState) {
+      if (this.previousState[key]) {
+        const nutKey = keyToNutKey(key);
+        if (nutKey !== undefined) {
+          streamDeck.logger.info(`Releasing key ${nutKey} for ${key}`);
+          await keyboard.releaseKey(nutKey);
+        } else {
+          streamDeck.logger.warn(`No nut-js mapping for key: ${key}`);
+        }
+      }
+    }
+    this.previousState = {};
   }
 
   private delay(ms: number): Promise<void> {

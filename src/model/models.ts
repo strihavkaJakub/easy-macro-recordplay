@@ -11,6 +11,7 @@ export type Macro = {
 export type MacroSettings = {
   macros?: Macro[];
   currentRecording?: MacroEvent[];
+  delayBetweenReplays?: number;
   isRecording?: boolean;
 };
 
