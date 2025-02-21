@@ -70,9 +70,10 @@ export class MacroPlay extends SingletonAction<MacroSettings> {
     while (!this.stopPlayback) {
       for (const currentEvent of events) {
         if (this.stopPlayback) break;
+        streamDeck.logger.info(`Processing event with ${currentEvent.duration}ms duration`);
+        await this.delay(currentEvent.duration);
         await this.processEvent(currentEvent, this.previousState, keyboard);
         this.previousState = { ...currentEvent.keyState };
-        await this.delay(currentEvent.duration);
       }
       if (!this.stopPlayback) {
         streamDeck.logger.info(`Waiting ${delayBetweenReplays}ms before replaying the macro...`);
@@ -81,6 +82,7 @@ export class MacroPlay extends SingletonAction<MacroSettings> {
     }
 
     ev.action.setTitle("Replay");
+    await this.releaseAllKeys()
     streamDeck.logger.info("Playback finished or stopped.");
     this.isPlaying = false;
   }
