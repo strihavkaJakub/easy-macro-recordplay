@@ -13,11 +13,13 @@
 				"Keypad"
 			],
 			"States": [
-				{
+				{	
+					"Name": "Recording Start",
 					"Image": "imgs/actions/macro/start",
 					"TitleAlignment": "middle"
 				},
 				{
+					"Name": "Recording Stop",
 					"Image": "imgs/actions/macro/stop",
 					"TitleAlignment": "middle"
 				}
