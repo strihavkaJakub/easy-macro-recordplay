@@ -24,15 +24,14 @@ export class MacroRecord extends SingletonAction<MacroSettings> {
     this.settings.macros = this.settings.macros || [];
     this.settings.isRecording = false;
     await streamDeck.settings.setGlobalSettings(this.settings);
-    ev.action.setTitle("Record");
   }
 
   override async onKeyDown(ev: KeyDownEvent<MacroSettings>): Promise<void> {
     this.settings = await streamDeck.settings.getGlobalSettings<MacroSettings>() || {};
     const require = createRequire(import.meta.url);
     const { GlobalKeyboardListener } = require("node-global-key-listener");
-
-    if (!this.settings.isRecording) {
+    const state = ev.payload.state;
+    if (!this.settings.isRecording && state == 0) {
       await this.startRecording(ev, GlobalKeyboardListener);
     } else {
       await this.stopRecording(ev);
@@ -45,7 +44,6 @@ export class MacroRecord extends SingletonAction<MacroSettings> {
     this.settings.macros = [];
     this.lastTimestamp = Date.now();
     await streamDeck.settings.setGlobalSettings(this.settings);
-    await ev.action.setTitle("Recording...");
     streamDeck.logger.info("Started recording");
 
     this.keyboardListener = new GlobalKeyboardListener();
@@ -63,7 +61,6 @@ export class MacroRecord extends SingletonAction<MacroSettings> {
     await streamDeck.settings.setGlobalSettings(this.settings);
     if (!this.settings.currentRecording || this.settings.currentRecording.length === 0) {
       streamDeck.logger.warn("No key events recorded.");
-      await ev.action.setTitle("No Events");
       return;
     }
 
@@ -77,7 +74,6 @@ export class MacroRecord extends SingletonAction<MacroSettings> {
     this.settings.currentRecording = [];
     await streamDeck.settings.setGlobalSettings(this.settings);
     streamDeck.logger.info("Finished recording and saved macro", newMacro);
-    await ev.action.setTitle("Saved Macro");
   }
 
   private recordEvent(down: any): void {

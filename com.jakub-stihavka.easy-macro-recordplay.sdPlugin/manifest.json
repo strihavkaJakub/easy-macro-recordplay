@@ -36,10 +36,12 @@
 			],
 			"States": [
 				{
+					"Name": "Play Start",
 					"Image": "imgs/actions/macro/replay",
 					"TitleAlignment": "middle"
 				},
 				{
+					"Name": "Play Stop",
 					"Image": "imgs/actions/macro/stop",
 					"TitleAlignment": "middle"
 				}
