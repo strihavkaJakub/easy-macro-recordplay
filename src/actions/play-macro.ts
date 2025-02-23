@@ -16,6 +16,7 @@ export class MacroPlay extends SingletonAction {
   private previousState: { [key: string]: boolean } = {};
   private ignoreStartDelay = false;
   private settings: MacroSettings = {};
+  private instant: boolean = false
 
   override async onWillAppear(ev: WillAppearEvent): Promise<void> {
     this.isPlaying = false;
@@ -32,6 +33,7 @@ export class MacroPlay extends SingletonAction {
     const state = ev.payload.state;
     streamDeck.logger.info("Settings wtf", JSON.stringify(this.settings))
     this.ignoreStartDelay = this.settings.ignoreStartDelay ?? false
+    this.instant = this.settings.instant ?? false
     if (!this.isPlaying && state == 0) {
       await this.startPlayback(ev, this.settings);
     } else {
@@ -75,6 +77,7 @@ export class MacroPlay extends SingletonAction {
       for (const currentEvent of events) {
         if (this.stopPlayback) break;
         streamDeck.logger.info(`Processing event with ${currentEvent.duration + this.delayOffset}ms duration`);
+        streamDeck.logger.info("Instant: ", this.instant)
         if(!this.ignoreStartDelay)
           await this.delay(currentEvent.duration + this.delayOffset);
         this.ignoreStartDelay = false
@@ -140,7 +143,11 @@ export class MacroPlay extends SingletonAction {
     this.previousState = {};
   }
 
-  private delay(ms: number): Promise<void> {
+  private delay(ms: number) {
+    if(this.instant){
+      streamDeck.logger.info("Skipping delay")
+      return 
+    }
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

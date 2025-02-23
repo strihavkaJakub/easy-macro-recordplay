@@ -8,9 +8,6 @@
 </head>
 
 <body>
-    <!--
-        Learn more about property inspector components at https://sdpi-components.dev/docs/components
-    -->
     <sdpi-item label="Delay between replays (ms)">
         <div class="textfield-container">
             <sdpi-textfield
@@ -22,11 +19,17 @@
             </sdpi-textfield>
         </div>
     </sdpi-item> 
+    <sdpi-item label="Instant keypresses">
+        <sdpi-checkbox setting="instant" default=false global></sdpi-checkbox>
+        <p>
+            Ignore a delay between keypresses
+        </p>
+    </sdpi-item>
     <sdpi-item label="Ignore a delay on replay start and repeat">
-        <sdpi-checkbox setting="ignoreStartDelay" default=false global=></sdpi-checkbox>
+        <sdpi-checkbox setting="ignoreStartDelay" default=false global></sdpi-checkbox>
         <p>
             By default, the macro playback has the same start delay as the time between pressing the Record key and the first recorded keystroke. This check box can be used to switch off the start delay.
-            This also affects the playback delay. Without ignoring the start delay, the next replay will start after Delay Between Replays + the initial delay between pressing the record button and the first recorded keystroke.
+            This also affects the delay between replays. Without ignoring the start delay, the next replay will start after Delay Between Replays + the initial delay between pressing the record button and the first recorded keystroke.
         </p>
     </sdpi-item>
     <sdpi-item label="Delay offset (ms)">
@@ -43,7 +46,7 @@
             This setting allows you to add an offset to the delay between each keystroke. This can be useful if your playback keystrokes are too fast or too slow compared to the recorded speed.
         </p>
         <p>A positive value increases the delay between replays, a negative value decreases it.</p>
-        <p>I found that the most accurate delay offset for my PC was -4ms.</p>
+        <p>I have found that the most accurate delay offset for my PC is -4ms. But this can vary.</p>
     </sdpi-item>
 </body>
 
