@@ -9,9 +9,11 @@ export type Macro = {
 };
 
 export type MacroSettings = {
+  ignoreStartDelay?: boolean;
   macros?: Macro[];
   currentRecording?: MacroEvent[];
   delayBetweenReplays?: number;
+  delayOffset?: string;
   isRecording?: boolean;
 };
 

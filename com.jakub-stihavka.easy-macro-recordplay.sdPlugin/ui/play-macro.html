@@ -21,6 +21,28 @@
         >
             </sdpi-textfield>
         </div>
+    </sdpi-item> 
+    <sdpi-item label="Ignore a delay on replay start and repeat">
+        <sdpi-checkbox setting="ignoreStartDelay" default=false global=></sdpi-checkbox>
+        <p>
+            By default, the macro playback has the same start delay as the time between pressing the Record key and the first recorded keystroke. This check box can be used to switch off the start delay.
+            This also affects the playback delay. Without ignoring the start delay, the next replay will start after Delay Between Replays + the initial delay between pressing the record button and the first recorded keystroke.
+        </p>
+    </sdpi-item>
+    <sdpi-item label="Delay offset (ms)">
+        <div class="textfield-container">
+            <sdpi-textfield
+                setting="delayOffset"
+                global
+                pattern="^[\+\-]?[0-9]*$"
+                placeholder="Offset in ms (default 0)"
+        >
+            </sdpi-textfield>
+        </div>
+        <p>
+            This setting allows you to add an offset to the delay between each keystroke. This can be useful if your playback keystrokes are too fast or too slow compared to the recorded speed.
+        </p>
+        <p>A positive value increases the delay between replays, a negative value decreases it.</p>
     </sdpi-item>
 </body>
 

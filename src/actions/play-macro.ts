@@ -11,21 +11,29 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export class MacroPlay extends SingletonAction {
   private isPlaying = false;
   private stopPlayback = false;
-  private delayBetweenReplays = 1000;
+  private delayBetweenReplays: number = 1000;
+  private delayOffset: number = 0;
   private previousState: { [key: string]: boolean } = {};
+  private ignoreStartDelay = false;
+  private settings: MacroSettings = {};
 
   override async onWillAppear(ev: WillAppearEvent): Promise<void> {
     this.isPlaying = false;
     this.stopPlayback = false;
+    if (ev.payload.state == 0)
+      this.releaseAllKeys()
   }
 
   override async onKeyDown(ev: KeyDownEvent): Promise<void> {    
-    const settings = await streamDeck.settings.getGlobalSettings<MacroSettings>() || {};
-    this.delayBetweenReplays = settings.delayBetweenReplays || 1000;
+    this.settings = await streamDeck.settings.getGlobalSettings<MacroSettings>() || {};
+    this.delayBetweenReplays = this.settings.delayBetweenReplays as number || 1000;
+    this.delayOffset = this.settings.delayOffset ? parseInt(this.settings.delayOffset) : 0;
     const require = createRequire(import.meta.url);
     const state = ev.payload.state;
+    streamDeck.logger.info("Settings wtf", JSON.stringify(this.settings))
+    this.ignoreStartDelay = this.settings.ignoreStartDelay ?? false
     if (!this.isPlaying && state == 0) {
-      await this.startPlayback(ev, settings);
+      await this.startPlayback(ev, this.settings);
     } else {
       this.stopPlayback = true;
       this.isPlaying = false;
@@ -44,10 +52,10 @@ export class MacroPlay extends SingletonAction {
       return;
     }
     streamDeck.logger.info(`Playing macro ${JSON.stringify(ev.payload.settings)}`);
-    await this.startMacroLoop(settings.macros[0].events, ev, this.delayBetweenReplays);
+    await this.startMacroLoop(settings.macros[0].events, ev);
   }
 
-  private async startMacroLoop(events: MacroEvent[], ev: KeyDownEvent, delayBetweenReplays: number): Promise<void> {
+  private async startMacroLoop(events: MacroEvent[], ev: KeyDownEvent): Promise<void> {
     if (events.length === 0) {
       streamDeck.logger.info("No events to play");
       this.isPlaying = false;
@@ -66,15 +74,18 @@ export class MacroPlay extends SingletonAction {
     while (!this.stopPlayback) {
       for (const currentEvent of events) {
         if (this.stopPlayback) break;
-        streamDeck.logger.info(`Processing event with ${currentEvent.duration}ms duration`);
-        await this.delay(currentEvent.duration);
+        streamDeck.logger.info(`Processing event with ${currentEvent.duration + this.delayOffset}ms duration`);
+        if(!this.ignoreStartDelay)
+          await this.delay(currentEvent.duration + this.delayOffset);
+        this.ignoreStartDelay = false
         await this.processEvent(currentEvent, this.previousState, keyboard);
         this.previousState = { ...currentEvent.keyState };
       }
       if (!this.stopPlayback) {
-        streamDeck.logger.info(`Waiting ${delayBetweenReplays}ms before replaying the macro...`);
-        await this.delay(delayBetweenReplays);
+        streamDeck.logger.info(`Waiting ${this.delayBetweenReplays}ms before replaying the macro...`);
+        await this.delay(this.delayBetweenReplays);
       }
+      this.ignoreStartDelay = this.settings.ignoreStartDelay ?? false
     }
 
     await this.releaseAllKeys()
