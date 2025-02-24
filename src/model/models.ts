@@ -15,7 +15,8 @@ export type MacroSettings = {
   delayBetweenReplays?: number;
   delayOffset?: string;
   isRecording?: boolean;
-  instant?: boolean
+  instant?: boolean;
+  playMouse?: boolean;
 };
 
 export enum EventType {

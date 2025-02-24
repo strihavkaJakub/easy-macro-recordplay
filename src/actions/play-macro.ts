@@ -3,7 +3,7 @@ import { MacroEvent, MacroSettings } from "../model/models";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import { createRequire } from "module";
-import { keyToNutKey } from "../utils/utils";  // converts key string to JS key code
+import { keyToNutKey, keyToNutMouse } from "../utils/utils";  // converts key string to JS key code
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -17,6 +17,7 @@ export class MacroPlay extends SingletonAction {
   private ignoreStartDelay = false;
   private settings: MacroSettings = {};
   private instant: boolean = false
+  private playMouse: boolean = true
 
   override async onWillAppear(ev: WillAppearEvent): Promise<void> {
     this.isPlaying = false;
@@ -31,9 +32,9 @@ export class MacroPlay extends SingletonAction {
     this.delayOffset = this.settings.delayOffset ? parseInt(this.settings.delayOffset) : 0;
     const require = createRequire(import.meta.url);
     const state = ev.payload.state;
-    streamDeck.logger.info("Settings wtf", JSON.stringify(this.settings))
     this.ignoreStartDelay = this.settings.ignoreStartDelay ?? false
     this.instant = this.settings.instant ?? false
+    this.playMouse = this.settings.playMouse ?? true
     if (!this.isPlaying && state == 0) {
       await this.startPlayback(ev, this.settings);
     } else {
@@ -66,22 +67,23 @@ export class MacroPlay extends SingletonAction {
     streamDeck.logger.info(`Playing macro with ${events.length} events`);
 
     const require = createRequire(import.meta.url);
-    const { keyboard, Key } = require("@nut-tree-fork/nut-js") as {
+    const { keyboard, Key, mouse } = require("@nut-tree-fork/nut-js") as {
       keyboard: any;
       Key: { [key: string]: number };
+      mouse: any;
     };
     keyboard.config.autoDelayMs = 0;
+    mouse.config.autoDelayMs = 0;
     this.previousState = {};
 
     while (!this.stopPlayback) {
       for (const currentEvent of events) {
         if (this.stopPlayback) break;
         streamDeck.logger.info(`Processing event with ${currentEvent.duration + this.delayOffset}ms duration`);
-        streamDeck.logger.info("Instant: ", this.instant)
         if(!this.ignoreStartDelay)
           await this.delay(currentEvent.duration + this.delayOffset);
         this.ignoreStartDelay = false
-        await this.processEvent(currentEvent, this.previousState, keyboard);
+        await this.processEvent(currentEvent, this.previousState, keyboard, mouse);
         this.previousState = { ...currentEvent.keyState };
       }
       if (!this.stopPlayback) {
@@ -96,26 +98,34 @@ export class MacroPlay extends SingletonAction {
     this.isPlaying = false;
   }
 
-  private async processEvent(currentEvent: MacroEvent, previousState: { [key: string]: boolean }, keyboard: any): Promise<void> {
+  private async processEvent(currentEvent: MacroEvent, previousState: { [key: string]: boolean }, keyboard: any, mouse: any): Promise<void> {
     for (const key in currentEvent.keyState) {
       const isPressedNow = currentEvent.keyState[key];
       const wasPressedBefore = previousState[key] || false;
 
+      const isMouseKey = key.includes("MOUSE")
+      const nutKey = isMouseKey ? keyToNutMouse(key) : keyToNutKey(key)
+
       if (isPressedNow && !wasPressedBefore) {
-        const nutKey = keyToNutKey(key);
-        if (nutKey !== undefined) {
+        if (nutKey !== undefined && !isMouseKey) {
           streamDeck.logger.info(`Pressing key ${nutKey} for ${key}`);
           await keyboard.pressKey(nutKey);
-        } else {
+        } else if (isMouseKey && this.playMouse) {
+          streamDeck.logger.info("mouseKey:",nutKey)
+          await mouse.pressButton(nutKey)
+        }
+        else {
           streamDeck.logger.warn(`No nut-js mapping for key: ${key}`);
         }
       }
 
       if (!isPressedNow && wasPressedBefore) {
-        const nutKey = keyToNutKey(key);
-        if (nutKey !== undefined) {
+        if (nutKey !== undefined && !isMouseKey) {
           streamDeck.logger.info(`Releasing key ${nutKey} for ${key}`);
           await keyboard.releaseKey(nutKey);
+        } else if (isMouseKey && this.playMouse) {
+          streamDeck.logger.info("mouseKey:",nutKey)
+          await mouse.releaseButton(nutKey)
         } else {
           streamDeck.logger.warn(`No nut-js mapping for key: ${key}`);
         }
@@ -125,17 +135,24 @@ export class MacroPlay extends SingletonAction {
 
   private async releaseAllKeys(): Promise<void> {
     const require = createRequire(import.meta.url);
-    const { keyboard } = require("@nut-tree-fork/nut-js") as {
+    const { keyboard, mouse } = require("@nut-tree-fork/nut-js") as {
       keyboard: any;
+      mouse: any;
     };
 
     for (const key in this.previousState) {
       if (this.previousState[key]) {
-        const nutKey = keyToNutKey(key);
-        if (nutKey !== undefined) {
+        const isMouseKey = key.includes("MOUSE")
+        const nutKey = isMouseKey ? keyToNutMouse(key) : keyToNutKey(key)
+        if (nutKey !== undefined && !isMouseKey) {
           streamDeck.logger.info(`Releasing key ${nutKey} for ${key}`);
           await keyboard.releaseKey(nutKey);
-        } else {
+        } 
+        else if (isMouseKey && this.playMouse) {
+          streamDeck.logger.info(`Releasing mouse ${key} for ${key}`);
+          await mouse.releaseButton(nutKey)
+        }
+        else {
           streamDeck.logger.warn(`No nut-js mapping for key: ${key}`);
         }
       }

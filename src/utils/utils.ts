@@ -2,8 +2,9 @@ import streamDeck from "@elgato/streamdeck";
 import { createRequire } from "module";
 
 const require = createRequire(import.meta.url);
-const { Key } = require("@nut-tree-fork/nut-js") as {
+const { Key, Button } = require("@nut-tree-fork/nut-js") as {
   Key: { [key: string]: any };
+  Button: { [button: string]: any };
 };
 
 /**
@@ -60,6 +61,10 @@ const keyMappings: { [key: string]: any } = {
   "SQUARE BRACKET OPEN": Key.LeftBracket, "FORWARD SLASH": Key.Slash, 
 };
 
+const mouseMappings: { [key: string]: any } = {
+  "LEFT": Button.LEFT, "RIGHT": Button.RIGHT, "MIDDLE": Button.MIDDLE
+};
+
 /**
  * Convert a key name (e.g., "A", "LEFT SHIFT") to its `nut-js` equivalent.
  */
@@ -71,4 +76,10 @@ export function keyToNutKey(key: string): any | undefined {
     streamDeck.logger.warn(`No mapping found for key: ${key}`);
     return undefined;
   }
+}
+
+export function keyToNutMouse(key: string): any | undefined {
+  const upperKey = key.toUpperCase();
+  const value = upperKey.replace("MOUSE ", "")
+  return mouseMappings[value.toString()];
 }
