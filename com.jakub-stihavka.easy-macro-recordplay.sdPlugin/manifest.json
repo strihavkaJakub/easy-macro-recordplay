@@ -6,7 +6,7 @@
 		{
 			"Name": "Record Macro",
 			"UUID": "com.jakub-stihavka.easy-macro-recordplay.record",
-			"Icon": "imgs/actions/counter/icon",
+			"Icon": "imgs/actions/macro/start",
 			"Tooltip": "Records a keyboard macro",
 			"PropertyInspectorPath": "ui/record-macro.html",
 			"Controllers": [
@@ -28,7 +28,7 @@
 		{
 			"Name": "Play Macro",
 			"UUID": "com.jakub-stihavka.easy-macro-recordplay.play",
-			"Icon": "imgs/actions/counter/icon",
+			"Icon": "imgs/actions/macro/replay",
 			"Tooltip": "Plays a recorded keyboard macro",
 			"PropertyInspectorPath": "ui/play-macro.html",
 			"Controllers": [
