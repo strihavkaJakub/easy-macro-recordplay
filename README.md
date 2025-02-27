@@ -13,6 +13,15 @@
   <li>Play Macro</li>
   <ul><li>Plays back whatever was recorded until the action is pressed again.</li></ul>
 </ul>
+
+<h2>Security - PLEASE READ</h2>
+<p>The plugin does not use any internet connection or anything that could send your private data.</p>
+<p>It only collects what you type/press while the recording is running and then it is stored in the plugin global settings. Then a Play action replays what has been recorded. 
+The memory is deleted and overwritten on a new recording.</p>
+<p><b>The plugin does not care what you write, does not analyze it in any way and does not send any data elsewhere</b></p>
+
+<p><b>But please do not record any sensitive information. The global settings are not that secure - based on the Elgato docs, they are not meant to store sensitive info</b></p>
+
 <h2>Input modifiers for Play Action:</h2>
 <ul>
   <li>Delay between loops (ms)</li>
