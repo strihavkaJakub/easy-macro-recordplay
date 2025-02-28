@@ -22,8 +22,7 @@ export class MacroPlay extends SingletonAction {
   override async onWillAppear(ev: WillAppearEvent): Promise<void> {
     this.isPlaying = false;
     this.stopPlayback = false;
-    if (ev.payload.state == 0)
-      this.releaseAllKeys()
+    this.releaseAllKeys()
   }
 
   override async onKeyDown(ev: KeyDownEvent): Promise<void> {    
@@ -79,6 +78,7 @@ export class MacroPlay extends SingletonAction {
     while (!this.stopPlayback) {
       for (const currentEvent of events) {
         if (this.stopPlayback) break;
+        if (!this.isPlaying) break;
         streamDeck.logger.info(`Processing event with ${currentEvent.duration + this.delayOffset}ms duration`);
         if(!this.ignoreStartDelay)
           await this.delay(currentEvent.duration + this.delayOffset);
@@ -86,7 +86,7 @@ export class MacroPlay extends SingletonAction {
         await this.processEvent(currentEvent, this.previousState, keyboard, mouse);
         this.previousState = { ...currentEvent.keyState };
       }
-      if (!this.stopPlayback) {
+      if (!this.stopPlayback && !this.instant) {
         streamDeck.logger.info(`Waiting ${this.delayBetweenReplays}ms before replaying the macro...`);
         await this.delay(this.delayBetweenReplays);
       }
@@ -163,7 +163,7 @@ export class MacroPlay extends SingletonAction {
   private delay(ms: number) {
     if(this.instant){
       streamDeck.logger.info("Skipping delay")
-      return 
+      return new Promise((resolve) => setTimeout(resolve, 0));
     }
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
