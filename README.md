@@ -90,7 +90,7 @@ The memory is deleted and overwritten on a new recording.</p>
 
 <h3>How to run</h3>
 A project based on the Stream Deck SDK: <a href="https://docs.elgato.com/streamdeck/sdk/introduction/getting-started/">https://docs.elgato.com/streamdeck/sdk/introduction/getting-started/</a>
-Requirements:
+<h3>Requirements:</h3>
 <ul>
   <li>Node.js version 20 or higher.</li>
   <li>Stream Deck device.</li>
