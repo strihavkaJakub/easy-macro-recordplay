@@ -1,7 +1,10 @@
 {
     "scripts": {
         "build": "rollup -c",
-        "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.jakub-stihavka.easy-macro-recordplay\""
+        "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.jakub-stihavka.easy-macro-recordplay\"",
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "test:coverage": "jest --coverage"
     },
     "type": "module",
     "devDependencies": {
@@ -11,8 +14,11 @@
         "@rollup/plugin-terser": "^0.4.4",
         "@rollup/plugin-typescript": "^12.1.0",
         "@tsconfig/node20": "^20.1.2",
+        "@types/jest": "^29.5.14",
         "@types/node": "~20.15.0",
+        "jest": "^29.7.0",
         "rollup": "^4.0.2",
+        "ts-jest": "^29.3.2",
         "tslib": "^2.6.2",
         "typescript": "^5.2.2"
     },

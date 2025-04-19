@@ -1,4 +1,4 @@
-<h1>Easy macro Record/Play</h1>
+<h1>Easy Macro Record/Play</h1>
 <h2>About the plugin</h2>
 <p>A very easy plugin to record and play a macro from a StreamDeck.</p>
 <p>Each keystroke or mouse click is recorded with a corresponding delay as it is entered.</p>
@@ -22,6 +22,39 @@ The memory is deleted and overwritten on a new recording.</p>
 
 <p><b>But please do not record any sensitive information. The global settings are not that secure - based on the Elgato docs, they are not meant to store sensitive info</b></p>
 
+<h2>Installation for Users</h2>
+<ol>
+  <li>Download the plugin from the Elgato Marketplace</li>
+  <li>Double-click the downloaded file to install it to your Stream Deck</li>
+  <li>The plugin should now appear in your Stream Deck actions list under "Easy Macro Record/Play"</li>
+  <li>Drag the "Record Macro" and "Play Macro" actions to your Stream Deck</li>
+</ol>
+
+<h3>System Requirements</h3>
+<ul>
+  <li>Stream Deck device</li>
+  <li>Stream Deck software version 6.4 or higher</li>
+  <li>Windows 10 or newer / macOS 12 or newer</li>
+</ul>
+
+<h2>How to Use</h2>
+
+<h3>Recording a Macro</h3>
+<ol>
+  <li>Press the "Record Macro" button on your Stream Deck</li>
+  <li>The button will change to indicate recording is in progress</li>
+  <li>Perform the keyboard and/or mouse actions you want to record</li>
+  <li>Press the "Record Macro" button again to stop recording and save the macro</li>
+</ol>
+
+<h3>Playing a Macro</h3>
+<ol>
+  <li>Press the "Play Macro" button on your Stream Deck</li>
+  <li>The button will change to indicate playback is in progress</li>
+  <li>The recorded macro will be executed</li>
+  <li>Press the "Play Macro" button again to stop playback</li>
+</ol>
+
 <h2>Input modifiers for Play Action:</h2>
 <ul>
   <li>Delay between loops (ms)</li>
@@ -38,7 +71,24 @@ The memory is deleted and overwritten on a new recording.</p>
   <li>I have found that the most accurate delay offset for my PC is -4ms. But this can vary.</li></ul>
 </ul>
 
-<h2>How to run</h2>
+<h2>Troubleshooting</h2>
+
+<h3>Common Issues</h3>
+<ul>
+  <li><strong>Macro doesn't record:</strong> Make sure no other applications are capturing keyboard input globally</li>
+  <li><strong>Playback doesn't work in some applications:</strong> Some applications may block simulated keyboard input for security reasons</li>
+  <li><strong>Macro playback is too fast/slow:</strong> Adjust the "Delay offset" setting in the Play Macro action</li>
+</ul>
+
+<h3>Platform-Specific Notes</h3>
+<ul>
+  <li><strong>Windows:</strong> Fully tested on Windows 10/11</li>
+  <li><strong>Mac:</strong> Support for standard keys and Mac-specific keys (Command, Option) has been implemented and tested</li>
+</ul>
+
+<h2>For Developers</h2>
+
+<h3>How to run</h3>
 A project based on the Stream Deck SDK: <a href="https://docs.elgato.com/streamdeck/sdk/introduction/getting-started/">https://docs.elgato.com/streamdeck/sdk/introduction/getting-started/</a>
 Requirements:
 <ul>
@@ -54,5 +104,10 @@ Requirements:
 <h3>To run the code, install the plugin and reflect all code on save</h3>
 <code>npm run watch</code>
 
-<H2>Currently tested only on Windows.</H2>
-Theoretically basic keys should work on other platforms but some OS specific keys (like Option key) might not work
+<h3>Running tests</h3>
+<code>npm test</code>
+
+<h2>Version History</h2>
+<ul>
+  <li><strong>1.0.0.0</strong> - Initial public release with Windows and Mac support</li>
+</ul>
