@@ -20,7 +20,7 @@
 				},
 				{
 					"Name": "Recording Stop",
-					"Image": "imgs/actions/macro/stop",
+					"Image": "imgs/actions/macro/recording",
 					"TitleAlignment": "middle"
 				}
 			]
@@ -49,7 +49,7 @@
 		}
 	],
 	"Category": "Easy Macro Record/Play",
-	"CategoryIcon": "imgs/plugin/macro",
+	"CategoryIcon": "imgs/plugin/category-icon",
 	"CodePath": "bin/plugin.js",
 	"Description": "Easy plugin to record and play any keyboard macro",
 	"Icon": "imgs/plugin/marketplace",
