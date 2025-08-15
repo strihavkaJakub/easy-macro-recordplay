@@ -22,10 +22,17 @@ The memory is deleted and overwritten on a new recording.</p>
 
 <p><b>But please do not record any sensitive information. The global settings are not that secure - based on the Elgato docs, they are not meant to store sensitive info</b></p>
 
-<h2>Installation for Users</h2>
+<h2>Installation from Marketplace</h2>
 <ol>
   <li>Download the plugin from the Elgato Marketplace</li>
-  <li>Double-click the downloaded file to install it to your Stream Deck</li>
+  <li>The plugin should now appear in your Stream Deck actions list under "Easy Macro Record/Play"</li>
+  <li>Drag the "Record Macro" and "Play Macro" actions to your Stream Deck</li>
+</ol>
+
+<h2>Installation from a downloaded repository</h2>
+<ol>
+  <li>Download the code repository</li>
+  <li>Open com.jakub-stihavka.easy-macro-recordplay.streamDeckPlugin file</li>
   <li>The plugin should now appear in your Stream Deck actions list under "Easy Macro Record/Play"</li>
   <li>Drag the "Record Macro" and "Play Macro" actions to your Stream Deck</li>
 </ol>
@@ -34,7 +41,7 @@ The memory is deleted and overwritten on a new recording.</p>
 <ul>
   <li>Stream Deck device</li>
   <li>Stream Deck software version 6.4 or higher</li>
-  <li>Windows 10 or newer / macOS 12 or newer</li>
+  <li>Windows 10 or newer</li>
 </ul>
 
 <h2>How to Use</h2>
@@ -83,14 +90,14 @@ The memory is deleted and overwritten on a new recording.</p>
 <h3>Platform-Specific Notes</h3>
 <ul>
   <li><strong>Windows:</strong> Fully tested on Windows 10/11</li>
-  <li><strong>Mac:</strong> Support for standard keys and Mac-specific keys (Command, Option) has been implemented and tested</li>
+  <li><strong>Mac:</strong> Currently not working. Every new recording needs a system password for key logger and playback does not work./li>
 </ul>
 
 <h2>For Developers</h2>
 
 <h3>How to run</h3>
 A project based on the Stream Deck SDK: <a href="https://docs.elgato.com/streamdeck/sdk/introduction/getting-started/">https://docs.elgato.com/streamdeck/sdk/introduction/getting-started/</a>
-Requirements:
+<h3>Requirements:</h3>
 <ul>
   <li>Node.js version 20 or higher.</li>
   <li>Stream Deck device.</li>
@@ -109,5 +116,5 @@ Requirements:
 
 <h2>Version History</h2>
 <ul>
-  <li><strong>1.0.0.0</strong> - Initial public release with Windows and Mac support</li>
+  <li><strong>1.0.0</strong> - Initial public release with Windows support</li>
 </ul>
