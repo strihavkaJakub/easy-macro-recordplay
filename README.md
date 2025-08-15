@@ -83,7 +83,7 @@ The memory is deleted and overwritten on a new recording.</p>
 <h3>Platform-Specific Notes</h3>
 <ul>
   <li><strong>Windows:</strong> Fully tested on Windows 10/11</li>
-  <li><strong>Mac:</strong> Support for standard keys and Mac-specific keys (Command, Option) has been implemented and tested</li>
+  <li><strong>Mac:</strong> Currently not working. Every new recording needs a system password for key logger and playback does not work./li>
 </ul>
 
 <h2>For Developers</h2>
@@ -109,5 +109,5 @@ A project based on the Stream Deck SDK: <a href="https://docs.elgato.com/streamd
 
 <h2>Version History</h2>
 <ul>
-  <li><strong>1.0.0.0</strong> - Initial public release with Windows and Mac support</li>
+  <li><strong>1.0.0.0</strong> - Initial public release with Windows support</li>
 </ul>
