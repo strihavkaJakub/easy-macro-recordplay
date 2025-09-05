@@ -1,12 +1,12 @@
 {
 	"Name": "Easy Macro Record/Play",
-	"Version": "1.0.0.0",
+	"Version": "1.0.0.1",
 	"Author": "Jakub Střihavka",
 	"Actions": [
 		{
 			"Name": "Record Macro",
-			"UUID": "com.jakub-stihavka.easy-macro-recordplay.record",
-			"Icon": "imgs/actions/macro/start",
+			"UUID": "com.jakub-strihavka.easy-macro-recordplay.record",
+			"Icon": "imgs/actions/macro/record-action",
 			"Tooltip": "Records a keyboard macro",
 			"PropertyInspectorPath": "ui/record-macro.html",
 			"Controllers": [
@@ -27,8 +27,8 @@
 		},
 		{
 			"Name": "Play Macro",
-			"UUID": "com.jakub-stihavka.easy-macro-recordplay.play",
-			"Icon": "imgs/actions/macro/replay",
+			"UUID": "com.jakub-stirhavka.easy-macro-recordplay.play",
+			"Icon": "imgs/actions/macro/play-action",
 			"Tooltip": "Plays a recorded keyboard macro",
 			"PropertyInspectorPath": "ui/play-macro.html",
 			"Controllers": [
@@ -71,5 +71,5 @@
 		"Version": "20",
 		"Debug": "enabled"
 	},
-	"UUID": "com.jakub-stihavka.easy-macro-recordplay"
+	"UUID": "com.jakub-strihavka.easy-macro-recordplay"
 }

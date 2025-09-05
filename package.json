@@ -1,7 +1,7 @@
 {
     "scripts": {
         "build": "rollup -c",
-        "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.jakub-stihavka.easy-macro-recordplay\"",
+        "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.jakub-strihavka.easy-macro-recordplay\"",
         "test": "jest",
         "test:watch": "jest --watch",
         "test:coverage": "jest --coverage"

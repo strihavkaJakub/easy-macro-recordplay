@@ -7,7 +7,7 @@ import { keyToNutKey, keyToNutMouse } from "../utils/utils";  // converts key st
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-@action({ UUID: "com.jakub-stihavka.easy-macro-recordplay.play" })
+@action({ UUID: "com.jakub-strihavka.easy-macro-recordplay.play" })
 export class MacroPlay extends SingletonAction {
   private isPlaying = false;
   private stopPlayback = false;

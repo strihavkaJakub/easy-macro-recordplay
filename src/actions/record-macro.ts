@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const emptySettings: MacroSettings = { currentRecording: [], isRecording: false, macros: [] };
 
-@action({ UUID: "com.jakub-stihavka.easy-macro-recordplay.record" })
+@action({ UUID: "com.jakub-strihavka.easy-macro-recordplay.record" })
 export class MacroRecord extends SingletonAction<MacroSettings> {
   private settings: MacroSettings = { currentRecording: [], isRecording: false, macros: [] };
   private keyboardListener: any = null;

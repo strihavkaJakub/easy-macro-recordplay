@@ -32,7 +32,7 @@ The memory is deleted and overwritten on a new recording.</p>
 <h2>Installation from a downloaded repository</h2>
 <ol>
   <li>Download the code repository</li>
-  <li>Open com.jakub-stihavka.easy-macro-recordplay.streamDeckPlugin file</li>
+  <li>Open com.jakub-strihavka.easy-macro-recordplay.streamDeckPlugin file</li>
   <li>The plugin should now appear in your Stream Deck actions list under "Easy Macro Record/Play"</li>
   <li>Drag the "Record Macro" and "Play Macro" actions to your Stream Deck</li>
 </ol>
@@ -106,7 +106,7 @@ A project based on the Stream Deck SDK: <a href="https://docs.elgato.com/streamd
 </ul>
 
 <h3>To install the plugin on your Stream Deck device</h3>
-<code>streamdeck link com.jakub-stihavka.easy-macro-recordplay.sdPlugin</code>
+<code>streamdeck link com.jakub-strihavka.easy-macro-recordplay.sdPlugin</code>
 
 <h3>To run the code, install the plugin and reflect all code on save</h3>
 <code>npm run watch</code>
